@@ -37,7 +37,10 @@ def render_markdown(md_content, is_dark, assets_dir, scroll_x=0, scroll_y=0):
 
     # Rewrite absolute file:/// URLs to app-local:/// for images in markdown
     md_content = md_content.replace("file:///", "app-local:///")
-    raw_md_json = json.dumps(md_content)
+    # Escape "</" so a literal "</script>" (or "</style>") inside the
+    # document content can't prematurely close the enclosing <script> tag
+    # this gets embedded in below.
+    raw_md_json = json.dumps(md_content).replace("</", "<\\/")
 
     html = template
     html = html.replace("{{ASSETS_DIR}}", assets_dir)
