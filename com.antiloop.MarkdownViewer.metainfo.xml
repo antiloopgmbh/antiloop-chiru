@@ -23,15 +23,17 @@
     <name>Antiloop GmbH</name>
   </developer>
   <releases>
-    <release version="1.2.0" date="2026-07-20">
+    <release version="1.2.0" date="2026-08-13">
       <description>
-        <p>Release v1.2.0 with elementary OS compatibility and UI refinements.</p>
+        <p>Release v1.2.0 with elementary OS compatibility, icon and security fixes.</p>
         <ul>
           <li>Renamed application to Antiloop Chiru for unique AppCenter identity.</li>
           <li>Added native Granite integration for elementary OS styling.</li>
           <li>Scoped Flatpak sandbox filesystem access to home directory (--filesystem=home:ro).</li>
           <li>Restricted X11 fallback permissions for Wayland security.</li>
           <li>Bundled custom symbolic icons for sidebar controls across all desktop environments.</li>
+          <li>Replaced remaining icons not covered by the freedesktop icon naming spec.</li>
+          <li>Sanitized rendered Markdown HTML to remove executable content from documents.</li>
         </ul>
       </description>
     </release>
