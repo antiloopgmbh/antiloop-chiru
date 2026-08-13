@@ -1,13 +1,13 @@
-# Antiloop Markdown Viewer
+# Antiloop Chiru
 
-Welcome to the **Antiloop Markdown Viewer**—a premium, offline-first Markdown reader designed specifically for GNOME. This application renders Markdown documents as styled HTML, providing a native look and feel that perfectly integrates with your system theme.
+Welcome to **Antiloop Chiru**—a premium, offline-first Markdown reader for GTK desktops. This application renders Markdown documents as styled HTML, providing a native look and feel that perfectly integrates with your system theme.
 
 ## Core Features
 
 - 📂 **Native File Browser**: View and open all Markdown files in the current directory from the left sidebar.
 - 📋 **Document Outline**: Navigate large documents easily using the auto-generated heading outline in the right sidebar.
 - 🔄 **History Navigation**: Move back and forward through visited files using mouse side buttons or header bar controls.
-- 🌓 **System Theme Sync**: Automatically synchronizes with GNOME light and dark mode preferences.
+- 🌓 **System Theme Sync**: Automatically synchronizes with your system's light and dark mode preferences.
 - 📊 **Mermaid Diagrams**: Fully renders flowcharts, sequence diagrams, and Gantt charts offline.
 - 💻 **Syntax Highlighting**: Beautiful theme-synchronized code block formatting.
 
