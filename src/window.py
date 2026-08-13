@@ -16,7 +16,7 @@ class MarkdownViewerWindow(current_platform.get_base_window_class()):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.set_default_size(1000, 700)
-        self.set_title("Antiloop Markdown Viewer")
+        self.set_title("Antiloop Chiru")
 
         self.history = NavigationHistory()
         self.settings = AppSettings()
@@ -143,7 +143,7 @@ class MarkdownViewerWindow(current_platform.get_base_window_class()):
         self.header_bar.pack_end(sep_right)
 
         # Print Button
-        self.btn_print = Gtk.Button(icon_name="printer-symbolic")
+        self.btn_print = Gtk.Button(icon_name="document-print-symbolic")
         self.btn_print.set_tooltip_text("Print Document (Ctrl+P)")
         self.btn_print.connect("clicked", lambda x: self.print_document())
         self.btn_print.set_sensitive(False)
@@ -726,7 +726,7 @@ class MarkdownViewerWindow(current_platform.get_base_window_class()):
 
                 settings = Gtk.PrintSettings.new()
                 filename = os.path.basename(self.history.current_filepath)
-                settings.set("job-name", f"Markdown Viewer - {filename}")
+                settings.set("job-name", f"Antiloop Chiru - {filename}")
                 print_op.set_print_settings(settings)
                 print_op.run_dialog(self)
         except Exception as e:

@@ -15,10 +15,10 @@
   <screenshots>
     <screenshot type="default">
       <caption>Main Window</caption>
-      <image>https://raw.githubusercontent.com/antiloopgmbh/gnome-markdown-viewer/main/screenshot.png</image>
+      <image>https://raw.githubusercontent.com/antiloopgmbh/antiloop-chiru/main/screenshot.png</image>
     </screenshot>
   </screenshots>
-  <url type="homepage">https://github.com/antiloopgmbh/gnome-markdown-viewer</url>
+  <url type="homepage">https://github.com/antiloopgmbh/antiloop-chiru</url>
   <developer id="com.antiloop">
     <name>Antiloop GmbH</name>
   </developer>
