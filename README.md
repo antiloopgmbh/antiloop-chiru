@@ -1,8 +1,6 @@
 # Antiloop Chiru
 
-A premium, offline-first Markdown viewer built using **Python 3**, **GTK4**, **Libadwaita**, and **WebKit**. 
-
-It provides a native Linux GTK look and feel, fits seamlessly into GTK desktop environments, and supports advanced formatting features like tables, code syntax highlighting, and Mermaid diagrams—all fully offline.
+A great Markdown viewer which supports advanced formatting features like tables, code syntax highlighting, Mermaid diagrams—all and much more.
 
 ![Antiloop Chiru Screenshot](screenshot.png)
 
@@ -25,7 +23,7 @@ It provides a native Linux GTK look and feel, fits seamlessly into GTK desktop e
     *   Translates sandboxed portal paths (`/run/user/...`) to their real host paths on launch via FUSE extended attributes (`xattr::document-portal.host-path`). This unlocks access to relative images and folder lists even when the app is started from file managers or CLI.
 *   🌓 **Theme Synchronization**: Listens to system settings and automatically switches between light and dark modes.
 *   💻 **Syntax Highlighting**: Real-time theme-synchronized code formatting for multiple languages (Python, JavaScript, YAML, etc.).
-*   🔒 **Secure Sandbox (Flatpak)**: Runs in an isolated Flatpak container with minimum required permissions.
+*   🔒 **Secure Sandbox (Flatpak)**: Runs in an isolated Flatpak container with read-only access to home folder (to allow hot-reloading and file/folder browsing).
 
 ---
 
