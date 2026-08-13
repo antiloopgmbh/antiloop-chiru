@@ -1,7 +1,20 @@
 import os
+import json
+import logging
 import mimetypes
 import urllib.parse
 from gi.repository import WebKit, Gtk, GObject, Gio, GLib, Gdk
+
+# Extensions whose default handler on a typical desktop is to execute the
+# file outright rather than merely display it (e.g. a .desktop file's
+# Exec= line, or an interpreter/binary). Links to these are never launched
+# automatically, unlike ordinary documents/images/media which open in
+# their normal viewer app.
+DANGEROUS_LINK_EXTENSIONS = (
+    '.desktop', '.exe', '.msi', '.bat', '.cmd', '.com', '.scr', '.ps1',
+    '.vbs', '.vbe', '.jar', '.sh', '.bash', '.zsh', '.command',
+    '.appimage', '.bin', '.run',
+)
 
 class DocumentView(WebKit.WebView):
     __gsignals__ = {
@@ -16,7 +29,6 @@ class DocumentView(WebKit.WebView):
         settings = WebKit.Settings()
         settings.set_allow_file_access_from_file_urls(True)
         settings.set_allow_universal_access_from_file_urls(True)
-        settings.set_enable_developer_extras(True)
 
         super().__init__(settings=settings)
         self.set_vexpand(True)
@@ -126,6 +138,8 @@ class DocumentView(WebKit.WebView):
                     
                     if file_path.lower().endswith(('.md', '.markdown')):
                         self.emit('file-navigation-requested', file_path)
+                    elif file_path.lower().endswith(DANGEROUS_LINK_EXTENSIONS):
+                        logging.warning("Refusing to launch potentially executable link target: %s", file_path)
                     else:
                         # Convert to standard file:// URI for launching external viewer
                         file_uri = "file://" + urllib.parse.quote(file_path, safe='/')
@@ -136,5 +150,5 @@ class DocumentView(WebKit.WebView):
         return False
 
     def scroll_to_heading(self, heading_id):
-        js = f"document.getElementById('{heading_id}').scrollIntoView({{behavior: 'smooth'}});"
+        js = f"document.getElementById({json.dumps(heading_id)}).scrollIntoView({{behavior: 'smooth'}});"
         self.evaluate_javascript(js, -1)

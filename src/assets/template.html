@@ -7,6 +7,7 @@
   <script>{{SCRIPT_MARKED}}</script>
   <script>{{SCRIPT_HIGHLIGHT}}</script>
   <script>{{SCRIPT_MERMAID}}</script>
+  <script>{{SCRIPT_PURIFY}}</script>
   <style>
     .markdown-body, .markdown-body[data-color-mode="light"] {
       --color-fg-default: #1f2328 !important;
@@ -114,7 +115,11 @@
 
       const markdownText = {{MARKDOWN_JSON}};
       const contentDiv = document.getElementById('content');
-      contentDiv.innerHTML = marked.parse(markdownText);
+      // Raw HTML embedded in the Markdown source (CommonMark allows it,
+      // and marked passes it through unsanitized as of v5+) is sanitized
+      // here so it can't carry executable event-handler attributes
+      // (onerror, onclick, javascript: URIs, etc.).
+      contentDiv.innerHTML = DOMPurify.sanitize(marked.parse(markdownText));
 
       // marked (since v5) no longer calls a `highlight` option itself, so
       // syntax-highlight fenced code blocks ourselves after parsing.
@@ -229,15 +234,27 @@
             if (node.nodeType === 3) { // Text node
                 const nodeValue = node.nodeValue;
                 if (nodeValue && nodeValue.match(regex)) {
-                    const span = document.createElement('span');
-                    span.innerHTML = nodeValue.replace(regex, '<mark>$1</mark>');
                     const parent = node.parentNode;
                     if (parent && !/(style|script|textarea)/i.test(parent.tagName)) {
-                        parent.replaceChild(span, node);
-                        while (span.firstChild) {
-                            parent.insertBefore(span.firstChild, span);
+                        // Build replacement nodes from plain text/DOM
+                        // elements only (no HTML parsing), so matched text
+                        // can't be reinterpreted as markup.
+                        const fragment = document.createDocumentFragment();
+                        let lastIndex = 0;
+                        nodeValue.replace(regex, (match, group, offset) => {
+                            if (offset > lastIndex) {
+                                fragment.appendChild(document.createTextNode(nodeValue.slice(lastIndex, offset)));
+                            }
+                            const mark = document.createElement('mark');
+                            mark.textContent = match;
+                            fragment.appendChild(mark);
+                            lastIndex = offset + match.length;
+                            return match;
+                        });
+                        if (lastIndex < nodeValue.length) {
+                            fragment.appendChild(document.createTextNode(nodeValue.slice(lastIndex)));
                         }
-                        parent.removeChild(span);
+                        parent.replaceChild(fragment, node);
                       }
                 }
             } else if (node.nodeType === 1 && node.childNodes && !/(style|script|textarea)/i.test(node.tagName)) {

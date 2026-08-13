@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 import sys
 import os
+import logging
 
 import gi
 
@@ -20,6 +21,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from app import MarkdownViewerApp
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.WARNING)
     GLib.set_prgname("com.antiloop.MarkdownViewer")
     GLib.set_application_name("Antiloop Chiru")
     app = MarkdownViewerApp()

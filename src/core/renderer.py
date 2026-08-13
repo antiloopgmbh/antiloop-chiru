@@ -37,6 +37,7 @@ def render_markdown(md_content, is_dark, assets_dir, scroll_x=0, scroll_y=0):
     script_marked = _load_asset(assets_dir, "marked.min.js")
     script_highlight = _load_asset(assets_dir, "highlight.min.js")
     script_mermaid = _load_asset(assets_dir, "mermaid.min.js")
+    script_purify = _load_asset(assets_dir, "purify.min.js")
 
     # Rewrite absolute file:/// URLs to app-local:/// for images in markdown
     md_content = md_content.replace("file:///", "app-local:///")
@@ -52,16 +53,11 @@ def render_markdown(md_content, is_dark, assets_dir, scroll_x=0, scroll_y=0):
     html = html.replace("{{SCRIPT_MARKED}}", script_marked)
     html = html.replace("{{SCRIPT_HIGHLIGHT}}", script_highlight)
     html = html.replace("{{SCRIPT_MERMAID}}", script_mermaid)
+    html = html.replace("{{SCRIPT_PURIFY}}", script_purify)
     html = html.replace("{{THEME}}", theme_val)
     html = html.replace("{{MARKDOWN_JSON}}", raw_md_json)
     html = html.replace("{{MERMAID_THEME}}", mermaid_theme)
     html = html.replace("{{SCROLL_X}}", str(scroll_x))
     html = html.replace("{{SCROLL_Y}}", str(scroll_y))
-
-    try:
-        with open("/tmp/debug_rendered.html", "w", encoding="utf-8") as f:
-            f.write(html)
-    except Exception:
-        pass
 
     return html

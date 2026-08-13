@@ -57,9 +57,10 @@ async function bundleGithubMarkdownCss() {
 async function main() {
   await mkdir(assetsDir, { recursive: true });
 
-  // marked and mermaid already ship prebuilt, minified UMD bundles.
+  // marked, mermaid and dompurify already ship prebuilt, minified UMD bundles.
   await copyAsset(path.join("marked", "marked.min.js"), "marked.min.js");
   await copyAsset(path.join("mermaid", "dist", "mermaid.min.js"), "mermaid.min.js");
+  await copyAsset(path.join("dompurify", "dist", "purify.min.js"), "purify.min.js");
 
   // highlight.js's npm package only ships unbundled CJS/ESM sources for
   // the "core + common languages" entry point, so bundle it ourselves.

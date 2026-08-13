@@ -1,6 +1,7 @@
 import os
 import urllib.parse
 import json
+import logging
 from gi.repository import Gtk, Gio, GLib, Pango, Gdk, WebKit
 from core.platform import current_platform
 
@@ -315,7 +316,7 @@ class MarkdownViewerWindow(current_platform.get_base_window_class()):
         filepath = os.path.abspath(filepath)
         if filepath.startswith("/run/user/"):
             filepath = self.resolve_portal_path(filepath)
-        print("OPENING FILEPATH:", filepath, flush=True)
+        logging.debug("Opening filepath: %s", filepath)
         if not os.path.exists(filepath):
             return
 
