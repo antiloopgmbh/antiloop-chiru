@@ -3,8 +3,7 @@
 <head>
   <meta charset="utf-8">
   <style>{{STYLE_GITHUB_MARKDOWN}}</style>
-  <style id="highlight-light" {{LIGHT_DISABLED}}>{{STYLE_HIGHLIGHT_LIGHT}}</style>
-  <style id="highlight-dark" {{DARK_DISABLED}}>{{STYLE_HIGHLIGHT_DARK}}</style>
+  <style id="highlight-theme">{{STYLE_HIGHLIGHT_THEME}}</style>
   <script>{{SCRIPT_MARKED}}</script>
   <script>{{SCRIPT_HIGHLIGHT}}</script>
   <script>{{SCRIPT_MERMAID}}</script>
@@ -110,16 +109,24 @@
     try {
       marked.setOptions({
         gfm: true,
-        breaks: true,
-        highlight: function(code, lang) {
-          const language = hljs.getLanguage(lang) ? lang : 'plaintext';
-          return hljs.highlight(code, { language }).value;
-        }
+        breaks: true
       });
 
       const markdownText = {{MARKDOWN_JSON}};
       const contentDiv = document.getElementById('content');
       contentDiv.innerHTML = marked.parse(markdownText);
+
+      // marked (since v5) no longer calls a `highlight` option itself, so
+      // syntax-highlight fenced code blocks ourselves after parsing.
+      contentDiv.querySelectorAll('pre code').forEach((block) => {
+        const match = block.className.match(/language-(\S+)/);
+        const language = match && hljs.getLanguage(match[1]) ? match[1] : null;
+        const result = language
+          ? hljs.highlight(block.textContent, { language })
+          : hljs.highlightAuto(block.textContent);
+        block.innerHTML = result.value;
+        block.classList.add('hljs');
+      });
 
       // Extract headings
       const headers = Array.from(contentDiv.querySelectorAll('h1, h2, h3, h4, h5, h6'));

@@ -23,14 +23,17 @@ def render_markdown(md_content, is_dark, assets_dir, scroll_x=0, scroll_y=0):
         return f"<html><body><h2>Error loading template</h2><p>{e}</p></body></html>"
 
     theme_val = "dark" if is_dark else "light"
-    light_disabled = "disabled" if is_dark else ""
-    dark_disabled = "disabled" if not is_dark else ""
     mermaid_theme = "dark" if is_dark else "default"
 
     # Read and inline all CSS and JS assets to prevent CORS / URI scheme restrictions
     style_github_markdown = _load_asset(assets_dir, "github-markdown.min.css")
-    style_highlight_light = _load_asset(assets_dir, "highlight-github.min.css")
-    style_highlight_dark = _load_asset(assets_dir, "highlight-github-dark.min.css")
+    # Only the active theme's highlight.js stylesheet is embedded: an inline
+    # <style> tag has no working "disabled" HTML attribute (only <link>
+    # honors it), so embedding both and toggling that attribute left the
+    # dark theme's colors always winning the cascade regardless of mode.
+    style_highlight_theme = _load_asset(
+        assets_dir, "highlight-github-dark.min.css" if is_dark else "highlight-github.min.css"
+    )
     script_marked = _load_asset(assets_dir, "marked.min.js")
     script_highlight = _load_asset(assets_dir, "highlight.min.js")
     script_mermaid = _load_asset(assets_dir, "mermaid.min.js")
@@ -45,13 +48,10 @@ def render_markdown(md_content, is_dark, assets_dir, scroll_x=0, scroll_y=0):
     html = template
     html = html.replace("{{ASSETS_DIR}}", assets_dir)
     html = html.replace("{{STYLE_GITHUB_MARKDOWN}}", style_github_markdown)
-    html = html.replace("{{STYLE_HIGHLIGHT_LIGHT}}", style_highlight_light)
-    html = html.replace("{{STYLE_HIGHLIGHT_DARK}}", style_highlight_dark)
+    html = html.replace("{{STYLE_HIGHLIGHT_THEME}}", style_highlight_theme)
     html = html.replace("{{SCRIPT_MARKED}}", script_marked)
     html = html.replace("{{SCRIPT_HIGHLIGHT}}", script_highlight)
     html = html.replace("{{SCRIPT_MERMAID}}", script_mermaid)
-    html = html.replace("{{LIGHT_DISABLED}}", light_disabled)
-    html = html.replace("{{DARK_DISABLED}}", dark_disabled)
     html = html.replace("{{THEME}}", theme_val)
     html = html.replace("{{MARKDOWN_JSON}}", raw_md_json)
     html = html.replace("{{MERMAID_THEME}}", mermaid_theme)

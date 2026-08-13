@@ -1,0 +1,15 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "chore"
+    ignore:
+      # v5.6.0 renamed all CSS custom properties (--color-canvas-subtle ->
+      # --bgColor-muted, etc.), breaking the dark-mode overrides hand-written
+      # in src/assets/template.html. See README.md for details. Remove this
+      # once template.html is updated to the new variable names.
+      - dependency-name: "github-markdown-css"
+        versions: [">=5.6.0"]

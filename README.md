@@ -69,6 +69,41 @@ so they cannot drift apart.
 
 ---
 
+## Vendored rendering assets (marked, highlight.js, mermaid)
+
+The document view renders Markdown inside a WebKit view using three
+third-party JS libraries plus GitHub's Markdown/highlight CSS themes,
+vendored as static files under [`src/assets/`](src/assets/):
+`marked.min.js`, `highlight.min.js`, `mermaid.min.js`,
+`github-markdown.min.css`, `highlight-github.min.css`,
+`highlight-github-dark.min.css`.
+
+These files are generated from the npm dependencies declared in
+[`package.json`](package.json) — that's what lets Dependabot see and bump
+their versions. After any dependency bump, regenerate and commit the diff:
+
+```bash
+npm install
+npm run build:assets
+git diff src/assets   # review, then commit
+```
+
+A CI check ([`.github/workflows/vendored-assets.yml`](.github/workflows/vendored-assets.yml))
+fails the build if `src/assets/` and `package.json` ever drift apart.
+
+> ⚠️ `github-markdown-css` is pinned to `5.5.1`. Starting with `5.6.0` the
+> package renamed all its CSS custom properties (e.g.
+> `--color-canvas-subtle` → `--bgColor-muted`), which no longer match the
+> dark/light overrides hand-written in
+> [`template.html`](src/assets/template.html) — upgrading past `5.5.x`
+> silently breaks dark-mode contrast in code blocks (low-contrast text on
+> a light `<pre>` background) without any build error. If Dependabot opens
+> a PR bumping past `5.6.0`, either reject it or update `template.html`'s
+> variable names to match first, and visually verify dark mode before
+> merging.
+
+---
+
 ## Troubleshooting
 
 ### Document pane stays blank / white

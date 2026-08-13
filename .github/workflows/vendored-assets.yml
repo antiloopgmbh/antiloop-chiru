@@ -1,0 +1,39 @@
+name: Vendored assets in sync
+
+# The Markdown renderer vendors marked, highlight.js, mermaid and
+# github-markdown-css as static files under src/assets/, built from the
+# npm dependencies in package.json (see scripts/build-assets.mjs). This
+# check fails whenever those committed files no longer match what
+# package.json declares - e.g. a Dependabot version bump that wasn't
+# followed by `npm run build:assets`.
+on:
+  push:
+    paths:
+      - package.json
+      - package-lock.json
+      - scripts/build-assets.mjs
+      - src/assets/**
+  pull_request:
+    paths:
+      - package.json
+      - package-lock.json
+      - scripts/build-assets.mjs
+      - src/assets/**
+
+jobs:
+  check-assets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci
+      - run: npm run build:assets
+      - name: Fail if the build produced a diff
+        run: |
+          if ! git diff --quiet -- src/assets; then
+            echo "::error::src/assets is out of sync with package.json. Run 'npm run build:assets' and commit the result."
+            git diff -- src/assets
+            exit 1
+          fi
