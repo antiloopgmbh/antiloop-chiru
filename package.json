@@ -12,6 +12,6 @@
     "mermaid": "10.9.8"
   },
   "devDependencies": {
-    "esbuild": "^0.28.1"
+    "esbuild": "^0.28.2"
   }
 }
